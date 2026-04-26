@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URBANSERVICE | Home Services</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Soft, Modern Color Palette & Base Styles */
+        :root {
+            --primary-color: #64b5f6; /* Soft Blue */
+            --primary-light: #e3f2fd;
+            --text-main: #37474f;
+            --text-light: #78909c;
+            --bg-color: #f9fbfd;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        header {
+            background-color: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 5rem 5%;
+            background-color: var(--primary-light);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Services Grid */
+        .section-title {
+            text-align: center;
+            margin: 4rem 0 2rem;
+            font-size: 2rem;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 5%;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .service-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        /* Forms & Tracking Layout */
+        .interactive-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            padding: 0 5% 4rem;
+        }
+
+        .panel {
+            flex: 1;
+            min-width: 300px;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 0.5rem;
+        }
+
+        input, select, button, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #42a5f5;
+        }
+
+        /* Map Container */
+        #map {
+            height: 350px;
+            width: 100%;
+            border-radius: 8px;
+            z-index: 1;
+        }
+        
+        .tracker-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--text-main);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">URBANSERVICE</div>
+        <nav>
+            <a href="#services">Services</a>
+            <a href="#booking">Book Now</a>
+            <a href="#join">Join the Team</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Professional Home Services, On Demand</h1>
+        <p>Expert cleaning, repairs, and salon services delivered right to your doorstep. Track your professional in real-time.</p>
+    </section>
+
+    <h2 class="section-title" id="services">Our Services</h2>
+    <section class="services">
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=500&auto=format&fit=crop" alt="Home Cleaning">
+            <div class="service-info">
+                <h3>Home Cleaning</h3>
+                <p>Deep cleaning for a sparkling home.</p>
+            </div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&auto=format&fit=crop" alt="AC Repair">
+            <div class="service-info">
+                <h3>AC Repair</h3>
+                <p>Expert servicing and cooling repair.</p>
+            </div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500&auto=format&fit=crop" alt="Home Salon">
+            <div class="service-info">
+                <h3>Home Salon</h3>
+                <p>Relaxing beauty treatments at home.</p>
+            </div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1607472586893-edb57cbceb42?w=500&auto=format&fit=crop" alt="Plumber">
+            <div class="service-info">
+                <h3>Plumber</h3>
+                <p>Fix leaks and pipe issues instantly.</p>
+            </div>
+        </div>
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&auto=format&fit=crop" alt="Electrician">
+            <div class="service-info">
+                <h3>Electrician</h3>
+                <p>Safe and reliable electrical work.</p>
+            </div>
+        </div>
+    </section>
+
+    <h2 class="section-title" id="booking">Booking & Live Tracking</h2>
+    <section class="interactive-section">
+        <div class="panel">
+            <h3>Book a Service</h3>
+            <form id="bookingForm">
+                <input type="text" placeholder="Full Name" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <select required>
+                    <option value="" disabled selected>Select a Service</option>
+                    <option value="cleaning">Home Cleaning</option>
+                    <option value="ac">AC Repair</option>
+                    <option value="salon">Home Salon</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                </select>
+                <textarea placeholder="Your Address" rows="3" required></textarea>
+                <button type="submit">Confirm Booking</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>Worker Live Tracking</h3>
+            <div id="map"></div>
+            <div class="tracker-info" id="trackingStatus">Awaiting booking confirmation to show worker location...</div>
+        </div>
+    </section>
+
+    <h2 class="section-title" id="join">Join as a Professional</h2>
+    <section class="interactive-section">
+        <div class="panel" style="max-width: 600px; margin: 0 auto;">
+            <h3>Partner With Us</h3>
+            <form id="jobForm">
+                <input type="text" placeholder="Full Name" required>
+                <input type="tel" placeholder="Phone Number" required>
+                <select required>
+                    <option value="" disabled selected>Your Expertise</option>
+                    <option value="cleaning">Cleaning Professional</option>
+                    <option value="ac">AC Technician</option>
+                    <option value="salon">Beautician</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                </select>
+                <input type="number" placeholder="Years of Experience" required>
+                <button type="submit">Submit Application</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 URBANSERVICE. All Rights Reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // --- 1. Map Initialization (Leaflet.js) ---
+        // Default center coordinates (e.g., center of a city)
+        const map = L.map('map').setView([28.6139, 77.2090], 13); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        let workerMarker;
+        let trackingInterval;
+
+        // --- 2. Booking Submission & Tracking Simulation ---
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Booking Confirmed! Your professional has been dispatched.');
+            
+            const statusText = document.getElementById('trackingStatus');
+            statusText.innerHTML = "<strong>Status:</strong> Worker is on the way. Tracking live...";
+            statusText.style.color = "#4caf50";
+
+            // If a marker already exists, remove it
+            if (workerMarker) {
+                map.removeLayer(workerMarker);
+                clearInterval(trackingInterval);
+            }
+
+            // Start worker at a nearby coordinate
+            let currentLat = 28.6139 + (Math.random() - 0.5) * 0.05;
+            let currentLng = 77.2090 + (Math.random() - 0.5) * 0.05;
+            
+            workerMarker = L.marker([currentLat, currentLng]).addTo(map)
+                .bindPopup('Your Professional')
+                .openPopup();
+            
+            map.setView([currentLat, currentLng], 14);
+
+            // Simulate live movement
+            trackingInterval = setInterval(() => {
+                // Move the marker slightly to simulate driving
+                currentLat += (Math.random() - 0.5) * 0.001;
+                currentLng += (Math.random() - 0.5) * 0.001;
+                workerMarker.setLatLng([currentLat, currentLng]);
+                map.panTo([currentLat, currentLng]);
+            }, 3000); // Updates every 3 seconds
+        });
+
+        // --- 3. Job Application Submission ---
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Application Submitted! Our recruitment team will contact you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
